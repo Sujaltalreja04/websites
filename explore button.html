@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Currency Converter</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+
+        .converter {
+            width: 300px;
+            margin: 0 auto;
+            text-align: center;
+            background-color: #f1f1f1;
+            padding: 20px;
+            border-radius: 10px;
+        }
+
+        select, input {
+            width: 100%;
+            padding: 10px;
+            margin: 5px 0;
+            border: 1px solid #ccc;
+            border-radius: 3px;
+        }
+
+        button {
+            background-color: #0074cc;
+            color: #fff;
+            border: none;
+            border-radius: 3px;
+            padding: 10px 20px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <div class="converter">
+        <h1>Currency Converter</h1>
+        <div>
+            <label for="fromCurrency">From Currency:</label>
+            <select id="fromCurrency">
+                <option value="USD">USD</option>
+                <option value="EUR">EUR</option>
+                <option value="GBP">GBP</option>
+                <option value="JPY">JPY</option>
+                <option value="AUD">AUD</option>
+                <option value="CAD">CAD</option>
+                <option value="INR">INR</option>
+                <option value="CNY">CNY</option>
+                <option value="THB">THB</option>
+                <option value="SGD">SGD</option>
+                <!-- Add more currency options here -->
+            </select>
+        </div>
+        <div>
+            <label for="toCurrency">To Currency:</label>
+            <select id="toCurrency">
+                <option value="USD">USD</option>
+                <option value="EUR">EUR</option>
+                <option value="GBP">GBP</option>
+                <option value="JPY">JPY</option>
+                <option value="AUD">AUD</option>
+                <option value="CAD">CAD</option>
+                <option value="INR">INR</option>
+                <option value="CNY">CNY</option>
+                <option value="THB">THB</option>
+                <option value="SGD">SGD</option>
+                <!-- Add more currency options here -->
+            </select>
+        </div>
+        <div>
+            <label for="amount">Amount:</label>
+            <input type="number" id="amount" placeholder="Enter amount" />
+        </div>
+        <div>
+            <label for="result">Result:</label>
+            <input type="text" id="result" readonly />
+        </div>
+        <button onclick="convertCurrency()">Convert</button>
+    </div>
+
+    <script>
+        function convertCurrency() {
+            const fromCurrency = document.getElementById("fromCurrency").value;
+            const toCurrency = document.getElementById("toCurrency").value;
+            const amount = parseFloat(document.getElementById("amount").value);
+            let exchangeRate;
+
+            // Define exchange rates for various currencies
+            const exchangeRates = {
+                "USD": {
+                    "EUR": 0.85,
+                    "GBP": 0.73,
+                    "JPY": 110.49,
+                    "AUD": 1.31,
+                    "CAD": 1.27,
+                    "INR": 74.12,
+                    "CNY": 6.38,
+                    "THB": 32.94,
+                    "SGD": 1.34
+                },
+                "EUR": {
+                    "USD": 1.18,
+                    "GBP": 0.86,
+                    "JPY": 130.51,
+                    "AUD": 1.54,
+                    "CAD": 1.50,
+                    "INR": 88.08,
+                    "CNY": 7.47,
+                    "THB": 38.73,
+                    "SGD": 1.58
+                },
+                "GBP": {
+                    "USD": 1.38,
+                    "EUR": 1.17,
+                    "JPY": 150.61,
+                    "AUD": 1.76,
+                    "CAD": 1.71,
+                    "INR": 98.92,
+                    "CNY": 8.28,
+                    "THB": 43.00,
+                    "SGD": 1.75
+                },
+                "JPY": {
+                    "USD": 0.0091,
+                    "EUR": 0.0077,
+                    "GBP": 0.0066,
+                    "AUD": 0.012,
+                    "CAD": 0.0117,
+                    "INR": 0.67,
+                    "CNY": 15.54,
+                    "THB": 0.48,
+                    "SGD": 0.013
+                },
+                "AUD": {
+                    "USD": 0.76,
+                    "EUR": 0.65,
+                    "GBP": 0.57,
+                    "JPY": 82.61,
+                    "CAD": 0.97,
+                    "INR": 56.20,
+                    "CNY": 5.92,
+                    "THB": 30.79,
+                    "SGD": 1.26
+                },
+                "CAD": {
+                    "USD": 0.79,
+                    "EUR": 0.67,
+                    "GBP": 0.59,
+                    "JPY": 85.72,
+                    "AUD": 1.03,
+                    "INR": 59.75,
+                    "CNY": 5.82,
+                    "THB": 30.34,
+                    "SGD": 1.24
+                },
+                "INR": {
+                    "USD": 0.0135,
+                    "EUR": 0.0114,
+                    "GBP": 0.0101,
+                    "JPY": 1.50,
+                    "AUD": 0.0179,
+                    "CAD": 0.0167,
+                    "CNY": 0.13,
+                    "THB": 2.13,
+                    "SGD": 0.028
+                },
+                "CNY": {
+                    "USD": 0.157,
+                    "EUR": 0.134,
+                    "GBP": 0.121,
+                    "JPY": 0.064,
+                    "AUD": 0.169,
+                    "CAD": 0.155,
+                    "INR": 7.69,
+                    "THB": 5.59,
+                    "SGD": 0.26
+                },
+                "THB": {
+                    "USD": 0.030,
+                    "EUR": 0.026,
+                    "GBP": 0.024,
+                    "JPY": 2.05,
+                    "AUD": 0.033,
+                    "CAD": 0.033,
+                    "INR": 0.47,
+                    "CNY": 0.18,
+                    "SGD": 0.041
+                },
+                "SGD": {
+                    "USD": 0.74,
+                    "EUR": 0.63,
+                    "GBP": 0.57,
+                    "JPY": 75.65,
+                    "AUD": 0.79,
+                    "CAD": 0.80,
+                    "INR": 35.56,
+                    "CNY": 3.84,
+                    "THB": 24.17
+                }
+                // Add more exchange rates for other currencies here
+            };
+
+            if (exchangeRates[fromCurrency] && exchangeRates[fromCurrency][toCurrency]) {
+                exchangeRate = exchangeRates[fromCurrency][toCurrency];
+                const result = (amount * exchangeRate).toFixed(2);
+                document.getElementById("result").value = result + " " + toCurrency;
+            } else {
+                document.getElementById("result").value = "Invalid conversion";
+            }
+        }
+    </script>
+</body>
+</html>
